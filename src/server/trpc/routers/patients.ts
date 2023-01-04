@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "../trpc"
+import { router, protectedProcedure } from "../trpc"
 import {
   CreatePatientSchema,
   EditPatientSchema,
@@ -8,10 +8,10 @@ import {
 import { treatmentsRouter } from "./treatments"
 
 export const patientsRouter = router({
-  getAll: publicProcedure.query(({ ctx }) => {
+  getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.patient.findMany()
   }),
-  deleteOne: publicProcedure
+  deleteOne: protectedProcedure
     .input(DeletePatientSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.patient.delete({
@@ -20,7 +20,7 @@ export const patientsRouter = router({
         },
       })
     }),
-  createOne: publicProcedure
+  createOne: protectedProcedure
     .input(CreatePatientSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.patient.create({
@@ -74,7 +74,7 @@ export const patientsRouter = router({
         },
       })
     }),
-  getOne: publicProcedure.input(GetPatientSchema).query(({ ctx, input }) => {
+  getOne: protectedProcedure.input(GetPatientSchema).query(({ ctx, input }) => {
     return ctx.prisma.patient.findFirst({
       where: {
         id: input.id,
@@ -85,7 +85,7 @@ export const patientsRouter = router({
       },
     })
   }),
-  editOne: publicProcedure
+  editOne: protectedProcedure
     .input(EditPatientSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.patient.update({

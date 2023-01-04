@@ -4,24 +4,24 @@ import {
   EditTreatmentSchema,
   DeleteTreatmentSchema,
 } from "../../../models/treatment"
-import { publicProcedure, router } from "../trpc"
+import { protectedProcedure, router } from "../trpc"
 
 export const treatmentsRouter = router({
-  getAll: publicProcedure
+  getAll: protectedProcedure
     .input(GetAllTreatmentsSchema)
     .query(({ ctx, input }) => {
       return ctx.prisma.treatments.findMany({
         where: input,
       })
     }),
-  createOne: publicProcedure
+  createOne: protectedProcedure
     .input(CreateTreatmentSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.treatments.create({
         data: input,
       })
     }),
-  editOne: publicProcedure
+  editOne: protectedProcedure
     .input(EditTreatmentSchema)
     .mutation(({ ctx, input: { id, service, procedure } }) => {
       return ctx.prisma.treatments.update({
@@ -34,7 +34,7 @@ export const treatmentsRouter = router({
         },
       })
     }),
-  deleteOne: publicProcedure
+  deleteOne: protectedProcedure
     .input(DeleteTreatmentSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.treatments.delete({
