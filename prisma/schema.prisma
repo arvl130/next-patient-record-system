@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  username String @id
+  password String @db.Text
+}
+
+model Patient {
+  id              String         @id @default(uuid())
+  fullName        String
+  birthDate       DateTime
+  gender          Gender
+  maritalStatus   MaritalStatus
+  email           String
+  mobileNumber    String
+  telephoneNumber String
+  dentalHistory   DentalHistory?
+  medicalChart    MedicalChart?
+  Treatments      Treatments[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  WIDOWED
+  SEPARATED
+}
+
+model DentalHistory {
+  patientId                  String  @id
+  patient                    Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  palate                     Boolean
+  badBreath                  Boolean
+  bleedingInMouth            Boolean
+  gumsColorChange            Boolean
+  lumpsInMouth               Boolean
+  teethColorChange           Boolean
+  sensitiveTeeth             Boolean
+  clickingSound              Boolean
+  pastDentalCareOrTreatments String
+}
+
+model MedicalChart {
+  patientId             String  @id
+  patient               Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  heartAilmentOrDisease String
+  hospitalAdmission     String
+  selfMedication        String
+  allergies             String
+  operations            String
+  tumorsOrGrowth        String
+  diabetes              Boolean
+  sinusitis             Boolean
+  bleedingGums          Boolean
+  hypertension          Boolean
+  stomachDisease        Boolean
+  bloodDisease          Boolean
+  headache              Boolean
+  liverDisease          Boolean
+  pregnant              String
+  cold                  Boolean
+  kidney                Boolean
+  familyHistoryOnAny    String
+}
+
+model Treatments {
+  id          String  @id @default(uuid())
+  patient     Patient @relation(fields: [patientId], references: [id])
+  patientId   String
+  service     String
+  serviceDate String
+  procedure   String  @db.Text
+}
