@@ -2,13 +2,13 @@ import { z } from "zod"
 import { CANNOT_BE_EMPTY, UP_TO_191_CHARS_ONLY } from "./validation-messages"
 
 export const GetAllTreatmentsSchema = z.object({
-  patientId: z.string().uuid(),
+  patientId: z.string(),
 })
 
 export type GetAllTreatmentsType = z.infer<typeof GetAllTreatmentsSchema>
 
 export const CreateTreatmentSchema = z.object({
-  patientId: z.string().uuid(),
+  patientId: z.string(),
   service: z
     .string()
     .min(1, {
