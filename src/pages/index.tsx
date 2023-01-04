@@ -20,7 +20,9 @@ function PatientEntry({ patient, deleteFn }: PatientEntryProps) {
   const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(false)
   return (
     <div className="grid grid-cols-[minmax(0,_8rem)_minmax(0,_12rem)_minmax(0,_1fr)_minmax(0,_10rem)_minmax(0,_10rem)_minmax(0,_6rem)] gap-4 px-4 py-2">
-      <div className="overflow-hidden overflow-ellipsis">{patient.id}</div>
+      <div className="overflow-hidden overflow-ellipsis uppercase">
+        {patient.id}
+      </div>
       <div className="overflow-hidden overflow-ellipsis">
         {patient.fullName}
       </div>

@@ -9,7 +9,7 @@ export const SignInSchema = z.object({
 export type SignInType = z.infer<typeof SignInSchema>
 
 export const DeletePatientSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
 })
 
 export type DeletePatientType = z.infer<typeof DeletePatientSchema>
@@ -65,13 +65,13 @@ export const CreatePatientSchema = z.object({
 export type CreatePatientType = z.infer<typeof CreatePatientSchema>
 
 export const GetPatientSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: z.string().optional(),
 })
 
 export type GetPatientType = z.infer<typeof GetPatientSchema>
 
 export const EditPatientSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   fullName: z
     .string()
     .min(1, { message: CANNOT_BE_EMPTY })
