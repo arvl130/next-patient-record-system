@@ -81,7 +81,7 @@ model MedicalChart {
 
 model Treatments {
   id          String  @id @default(uuid())
-  patient     Patient @relation(fields: [patientId], references: [id])
+  patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId   String
   service     String
   serviceDate String
