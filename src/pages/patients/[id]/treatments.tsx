@@ -73,7 +73,7 @@ function TreatmentEntry({ treatment, deleteFn, viewFn }: TreatmentEntryProps) {
   }
 
   return (
-    <div className="grid grid-cols-[1fr_1fr_1fr_6rem] gap-4 px-4 py-2">
+    <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_6rem)] gap-4 px-4 py-2">
       <div>{formattedDate(treatment.serviceDate)}</div>
       <div>{treatment.service}</div>
       <div>
@@ -148,7 +148,7 @@ function TreatmentsTable({
     return (
       <div>
         {/* Table header */}
-        <div className="grid grid-cols-[1fr_1fr_1fr_6rem] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
+        <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
           <div className="overflow-hidden overflow-ellipsis">Date</div>
           <div className="overflow-hidden overflow-ellipsis">Service</div>
           <div className="overflow-hidden overflow-ellipsis">Procedure</div>
@@ -163,7 +163,7 @@ function TreatmentsTable({
     return (
       <div>
         {/* Table header */}
-        <div className="grid grid-cols-[1fr_1fr_1fr_6rem] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
+        <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
           <div className="overflow-hidden overflow-ellipsis">Date</div>
           <div className="overflow-hidden overflow-ellipsis">Service</div>
           <div className="overflow-hidden overflow-ellipsis">Procedure</div>
@@ -191,7 +191,7 @@ function TreatmentsTable({
   return (
     <div>
       {/* Table header */}
-      <div className="grid grid-cols-[1fr_1fr_1fr_6rem] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
+      <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
         <div className="overflow-hidden overflow-ellipsis">Date</div>
         <div className="overflow-hidden overflow-ellipsis">Service</div>
         <div className="overflow-hidden overflow-ellipsis">Procedure</div>
@@ -200,7 +200,7 @@ function TreatmentsTable({
 
       {/* Create table item */}
       <form
-        className="grid grid-cols-[1fr_1fr_1fr_6rem] gap-x-4 px-4 py-2"
+        className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_6rem)] gap-x-4 px-4 py-2"
         onSubmit={handleSubmit((formData) => {
           createTreatmentFn(formData)
         })}
