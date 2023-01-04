@@ -5,12 +5,14 @@ import Loading from "../../components/Loading"
 import { useAuthenticatedUser } from "../../hooks/useUser"
 import { CreatePatientSchema, CreatePatientType } from "../../models/patient"
 import { trpc } from "../../utils/trpc"
+import { getYearsSinceDate } from "../../utils/get-years-since-date"
 
 export default function CreatePatient() {
   const createMutation = trpc.patients.createOne.useMutation()
   const router = useRouter()
 
   const {
+    watch,
     register,
     handleSubmit,
     formState: { errors },
@@ -113,7 +115,7 @@ export default function CreatePatient() {
                       id="calculatedAge"
                       className="rounded-full px-4 py-2 border border-teal-500 w-full pointer-events-none"
                     >
-                      N/A
+                      {getYearsSinceDate(watch("birthDate"))}
                     </span>
                   </div>
                 </div>

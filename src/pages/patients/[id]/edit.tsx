@@ -6,6 +6,7 @@ import { useAuthenticatedUser } from "../../../hooks/useUser"
 import { EditPatientSchema, EditPatientType } from "../../../models/patient"
 import { trpc } from "../../../utils/trpc"
 import Link from "next/link"
+import { getYearsSinceDate } from "../../../utils/get-years-since-date"
 
 export default function EditPatient() {
   const { query } = useRouter()
@@ -167,7 +168,9 @@ export default function EditPatient() {
                       id="calculatedAge"
                       className="rounded-full px-4 py-2 border border-teal-500 w-full pointer-events-none"
                     >
-                      N/A
+                      {watch("birthDate") === undefined
+                        ? getYearsSinceDate(patient.birthDate)
+                        : getYearsSinceDate(watch("birthDate"))}
                     </span>
                   </div>
                 </div>

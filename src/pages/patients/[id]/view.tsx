@@ -2,6 +2,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Loading from "../../../components/Loading"
 import { useAuthenticatedUser } from "../../../hooks/useUser"
+import { getYearsSinceDate } from "../../../utils/get-years-since-date"
 import { trpc } from "../../../utils/trpc"
 
 export default function ViewPatient() {
@@ -104,7 +105,7 @@ export default function ViewPatient() {
                     id="calculatedAge"
                     className="rounded-full px-4 py-2 border border-teal-500 w-full pointer-events-none"
                   >
-                    N/A
+                    {getYearsSinceDate(patient.birthDate)}
                   </span>
                 </div>
               </div>
