@@ -4,14 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Loading from "../../../components/Loading"
 import { useAuthenticatedUser } from "../../../hooks/useUser"
 import { EditPatientSchema, EditPatientType } from "../../../models/patient"
-import { trpc } from "../../../utils/trpc"
+import { api } from "../../../utils/api"
 import Link from "next/link"
 import { getYearsSinceDate } from "../../../utils/get-years-since-date"
 
 export default function EditPatient() {
   const { query } = useRouter()
   const patientId = query.id as string
-  const { data: patient, isLoading } = trpc.patients.getOne.useQuery(
+  const { data: patient, isLoading } = api.patients.getOne.useQuery(
     {
       id: patientId,
     },
@@ -33,7 +33,7 @@ export default function EditPatient() {
     return `${date.getFullYear()}-${month}-${dayOfTheMonth}`
   }
 
-  const mutation = trpc.patients.editOne.useMutation()
+  const mutation = api.patients.editOne.useMutation()
   const router = useRouter()
 
   const {

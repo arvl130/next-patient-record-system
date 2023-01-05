@@ -16,7 +16,7 @@ import {
   CreateTreatmentSchema,
   CreateTreatmentType,
 } from "../../../models/treatment"
-import { trpc } from "../../../utils/trpc"
+import { api } from "../../../utils/api"
 import { v4 as uuid } from "uuid"
 
 type PartialTreatment = {
@@ -327,7 +327,7 @@ export default function TreatmentsPage() {
   const patientId = idFromRouter as string | undefined
 
   const { data: treatments, isLoading: isLoadingTreatments } =
-    trpc.patients.treatments.getAll.useQuery(
+    api.patients.treatments.getAll.useQuery(
       {
         patientId: patientId as string,
       },
@@ -349,13 +349,13 @@ export default function TreatmentsPage() {
     resolver: zodResolver(CreateTreatmentSchema),
   })
 
-  const trpcContext = trpc.useContext()
+  const apiContext = api.useContext()
 
   const { mutate: createTreatment } =
-    trpc.patients.treatments.createOne.useMutation({
+    api.patients.treatments.createOne.useMutation({
       onMutate: async (input) => {
-        await trpcContext.patients.treatments.getAll.invalidate()
-        const prevTreatments = trpcContext.patients.treatments.getAll.getData()
+        await apiContext.patients.treatments.getAll.invalidate()
+        const prevTreatments = apiContext.patients.treatments.getAll.getData()
 
         if (!prevTreatments) return {}
 
@@ -365,7 +365,7 @@ export default function TreatmentsPage() {
           // We use a fake ID here, since the real ID is
           // generated on the backend.
         ]
-        trpcContext.patients.treatments.getAll.setData(
+        apiContext.patients.treatments.getAll.setData(
           {
             patientId: patientId as string,
           },
@@ -376,7 +376,7 @@ export default function TreatmentsPage() {
       },
       onError: (err, input, context) => {
         if (context?.prevTreatments)
-          trpcContext.patients.treatments.getAll.setData(
+          apiContext.patients.treatments.getAll.setData(
             {
               patientId: patientId as string,
             },
@@ -387,20 +387,20 @@ export default function TreatmentsPage() {
         reset()
       },
       onSettled: () => {
-        trpcContext.patients.treatments.getAll.invalidate()
+        apiContext.patients.treatments.getAll.invalidate()
       },
     })
 
   const { mutate: deleteTreatment } =
-    trpc.patients.treatments.deleteOne.useMutation({
+    api.patients.treatments.deleteOne.useMutation({
       onMutate: async (input) => {
-        await trpcContext.patients.treatments.getAll.invalidate()
-        const prevTreatments = trpcContext.patients.treatments.getAll.getData()
+        await apiContext.patients.treatments.getAll.invalidate()
+        const prevTreatments = apiContext.patients.treatments.getAll.getData()
 
         if (!prevTreatments) return {}
 
         const newTreatments = prevTreatments.filter(({ id }) => id !== input.id)
-        trpcContext.patients.treatments.getAll.setData(
+        apiContext.patients.treatments.getAll.setData(
           {
             patientId: patientId as string,
           },
@@ -411,7 +411,7 @@ export default function TreatmentsPage() {
       },
       onError: (err, input, context) => {
         if (context?.prevTreatments)
-          trpcContext.patients.treatments.getAll.setData(
+          apiContext.patients.treatments.getAll.setData(
             {
               patientId: patientId as string,
             },
@@ -419,7 +419,7 @@ export default function TreatmentsPage() {
           )
       },
       onSettled: () => {
-        trpcContext.patients.treatments.getAll.invalidate()
+        apiContext.patients.treatments.getAll.invalidate()
       },
     })
 

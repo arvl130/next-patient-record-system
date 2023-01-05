@@ -1,11 +1,10 @@
-import { Patient } from "@prisma/client"
 import Link from "next/link"
 import { useState } from "react"
 import { DeleteDialog } from "../components/Dialog"
 import { TrashIcon } from "../components/Icon"
 import Loading from "../components/Loading"
 import { useAuthenticatedUser } from "../hooks/useUser"
-import { trpc } from "../utils/trpc"
+import { api } from "../utils/api"
 
 type PatientEntryProps = {
   patient: {
@@ -57,13 +56,13 @@ function PatientEntry({ patient, deleteFn }: PatientEntryProps) {
 
 export default function Dashboard() {
   const { data: patients, isLoading: isLoadingPatients } =
-    trpc.patients.getAll.useQuery()
+    api.patients.getAll.useQuery()
 
-  const trpcContext = trpc.useContext()
-  const { mutate } = trpc.patients.deleteOne.useMutation({
+  const apiContext = api.useContext()
+  const { mutate } = api.patients.deleteOne.useMutation({
     onMutate: async (input) => {
-      await trpcContext.patients.getAll.cancel()
-      const prevPatients = trpcContext.patients.getAll.getData()
+      await apiContext.patients.getAll.cancel()
+      const prevPatients = apiContext.patients.getAll.getData()
 
       if (!prevPatients) return {}
 
@@ -71,15 +70,15 @@ export default function Dashboard() {
         return patient.id !== input.id
       })
 
-      trpcContext.patients.getAll.setData(undefined, newPatients)
+      apiContext.patients.getAll.setData(undefined, newPatients)
       return { prevPatients }
     },
     onError: async (err, input, context) => {
       if (context?.prevPatients)
-        trpcContext.patients.getAll.setData(undefined, context.prevPatients)
+        apiContext.patients.getAll.setData(undefined, context.prevPatients)
     },
     onSettled: async () => {
-      trpcContext.patients.getAll.invalidate()
+      apiContext.patients.getAll.invalidate()
     },
   })
 

@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Loading from "../../components/Loading"
 import { useAuthenticatedUser } from "../../hooks/useUser"
 import { CreatePatientSchema, CreatePatientType } from "../../models/patient"
-import { trpc } from "../../utils/trpc"
+import { api } from "../../utils/api"
 import { getYearsSinceDate } from "../../utils/get-years-since-date"
 
 export default function CreatePatient() {
-  const createMutation = trpc.patients.createOne.useMutation()
+  const createMutation = api.patients.createOne.useMutation()
   const router = useRouter()
 
   const {

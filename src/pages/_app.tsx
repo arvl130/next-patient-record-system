@@ -4,7 +4,7 @@ import Head from "next/head"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { SessionProvider } from "next-auth/react"
-import { trpc } from "../utils/trpc"
+import { api } from "../utils/api"
 import { Poppins } from "@next/font/google"
 
 const poppins = Poppins({
@@ -35,4 +35,4 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   )
 }
 
-export default trpc.withTRPC(App)
+export default api.withTRPC(App)

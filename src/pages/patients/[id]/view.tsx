@@ -3,13 +3,13 @@ import { useRouter } from "next/router"
 import Loading from "../../../components/Loading"
 import { useAuthenticatedUser } from "../../../hooks/useUser"
 import { getYearsSinceDate } from "../../../utils/get-years-since-date"
-import { trpc } from "../../../utils/trpc"
+import { api } from "../../../utils/api"
 
 export default function ViewPatient() {
   const { query } = useRouter()
   const patientId = query.id as string
 
-  const { data: patient, isLoading } = trpc.patients.getOne.useQuery(
+  const { data: patient, isLoading } = api.patients.getOne.useQuery(
     {
       id: patientId,
     },
