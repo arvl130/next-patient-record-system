@@ -5,12 +5,6 @@ import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { SessionProvider } from "next-auth/react"
 import { api } from "../utils/api"
-import { Poppins } from "@next/font/google"
-
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-})
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -24,9 +18,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/favicon.ico" />
       </Head>
-      <div
-        className={`${poppins.variable} font-sans text-sky-600 min-h-screen`}
-      >
+      <div className={`font-[Poppins] text-sky-600 min-h-screen`}>
         <Header />
         <Component {...pageProps} />
       </div>
