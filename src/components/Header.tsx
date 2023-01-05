@@ -3,12 +3,12 @@ import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import { useDateTime } from "../hooks/useDateTime"
 
 export default function Header() {
+  const { date, time } = useDateTime()
   const [isSignOutButtonDisabled, setSignOutButtonDisabled] = useState(false)
   const router = useRouter()
-  const { data: session } = useSession()
-  if (!session) return null
 
   async function handleSignOut() {
     try {
@@ -25,12 +25,15 @@ export default function Header() {
     }
   }
 
+  const { data: session } = useSession()
+  if (!session) return null
+
   return (
     <header className="font-[Poppins] text-sky-600 flex justify-between border-b">
-      <div className="bg-teal-500 text-white font-bold pl-5 pr-10 py-1">
-        Date and
+      <div className="bg-teal-500 text-white font-bold pl-5 pr-10 py-1 text-right">
+        {date}
         <br />
-        Time
+        {time}
       </div>
       <div className="flex items-center gap-8 pr-16">
         <Link

@@ -18,6 +18,7 @@ import {
 } from "../../../models/treatment"
 import { api } from "../../../utils/api"
 import { v4 as uuid } from "uuid"
+import { getMonthFromInt } from "../../../utils/date-int-to-str"
 
 type PartialTreatment = {
   patientId: string
@@ -40,36 +41,9 @@ function TreatmentEntry({ treatment, deleteFn, viewFn }: TreatmentEntryProps) {
   const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(false)
   function formattedDate(dateStr: string) {
     const date = new Date(dateStr)
-    const formattedDateAndYear = `${date.getDate()}, ${date.getFullYear()}`
-
-    switch (date.getMonth()) {
-      case 0:
-        return `January ${formattedDateAndYear}`
-      case 1:
-        return `February ${formattedDateAndYear}`
-      case 2:
-        return `March ${formattedDateAndYear}`
-      case 3:
-        return `April ${formattedDateAndYear}`
-      case 4:
-        return `May ${formattedDateAndYear}`
-      case 5:
-        return `June ${formattedDateAndYear}`
-      case 6:
-        return `July ${formattedDateAndYear}`
-      case 7:
-        return `August ${formattedDateAndYear}`
-      case 8:
-        return `September ${formattedDateAndYear}`
-      case 9:
-        return `October ${formattedDateAndYear}`
-      case 10:
-        return `November ${formattedDateAndYear}`
-      case 11:
-        return `December ${formattedDateAndYear}`
-      default:
-        return "Invalid date"
-    }
+    return `${getMonthFromInt(
+      date.getMonth()
+    )} ${date.getDate()}, ${date.getFullYear()}`
   }
 
   return (
