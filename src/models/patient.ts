@@ -9,7 +9,9 @@ export const SignInSchema = z.object({
 export type SignInType = z.infer<typeof SignInSchema>
 
 export const GetAllPatientSchema = z.object({
-  nameFilter: z.string(),
+  cursor: z.string().optional(),
+  limit: z.number().min(5).max(100),
+  searchFilter: z.string(),
 })
 
 export type GetAllPatientType = z.infer<typeof GetAllPatientSchema>

@@ -7,19 +7,48 @@ import {
   GetAllPatientSchema,
 } from "../../../models/patient"
 import { treatmentsRouter } from "./treatments"
+import { Patient } from "@prisma/client"
 
 export const patientsRouter = router({
   getAll: protectedProcedure
     .input(GetAllPatientSchema)
-    .query(({ ctx, input }) => {
-      if (input.nameFilter === "") return ctx.prisma.patient.findMany()
-      return ctx.prisma.patient.findMany({
-        where: {
-          fullName: {
-            contains: input.nameFilter,
-          },
-        },
-      })
+    .query(async ({ ctx, input: { limit, cursor, searchFilter } }) => {
+      const patients = cursor
+        ? await ctx.prisma.patient.findMany({
+            take: limit + 1,
+            where: {
+              fullName: {
+                contains: searchFilter,
+              },
+            },
+            cursor: {
+              id: cursor,
+            },
+          })
+        : await ctx.prisma.patient.findMany({
+            take: limit + 1,
+            where: {
+              fullName: {
+                contains: searchFilter,
+              },
+            },
+          })
+
+      const paginatedResult = {
+        patients,
+        // useInfiniteQuery gets confused while cleaning up empty pages
+        // if we have a null cursor, so make sure this is just string | undefined.
+        cursor: undefined as typeof cursor,
+      }
+
+      if (patients.length > limit) {
+        const patient = patients.pop() as Patient
+        const { id } = patient
+
+        paginatedResult.cursor = id
+      }
+
+      return paginatedResult
     }),
   deleteOne: protectedProcedure
     .input(DeletePatientSchema)
