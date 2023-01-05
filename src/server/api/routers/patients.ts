@@ -4,13 +4,23 @@ import {
   EditPatientSchema,
   DeletePatientSchema,
   GetPatientSchema,
+  GetAllPatientSchema,
 } from "../../../models/patient"
 import { treatmentsRouter } from "./treatments"
 
 export const patientsRouter = router({
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.patient.findMany()
-  }),
+  getAll: protectedProcedure
+    .input(GetAllPatientSchema)
+    .query(({ ctx, input }) => {
+      if (input.nameFilter === "") return ctx.prisma.patient.findMany()
+      return ctx.prisma.patient.findMany({
+        where: {
+          fullName: {
+            contains: input.nameFilter,
+          },
+        },
+      })
+    }),
   deleteOne: protectedProcedure
     .input(DeletePatientSchema)
     .mutation(({ ctx, input }) => {

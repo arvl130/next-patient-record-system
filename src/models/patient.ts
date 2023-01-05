@@ -8,6 +8,12 @@ export const SignInSchema = z.object({
 
 export type SignInType = z.infer<typeof SignInSchema>
 
+export const GetAllPatientSchema = z.object({
+  nameFilter: z.string(),
+})
+
+export type GetAllPatientType = z.infer<typeof GetAllPatientSchema>
+
 export const DeletePatientSchema = z.object({
   id: z.string(),
 })

@@ -54,9 +54,45 @@ function PatientEntry({ patient, deleteFn }: PatientEntryProps) {
   )
 }
 
+type SearchBarProps = {
+  onSearch: (searchText: string) => void
+}
+
+function SearchBar({ onSearch }: SearchBarProps) {
+  const [searchText, setSearchText] = useState("")
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSearch(searchText)
+      }}
+      className="grid grid-cols-[1fr_6rem] gap-3 mb-3"
+    >
+      <input
+        type="text"
+        value={searchText}
+        onChange={(e) => {
+          setSearchText(e.target.value)
+        }}
+        placeholder=" Type a name ..."
+        className="w-full rounded-md px-4 py-2 border border-sky-600 focus:outline-none focus:ring focus:ring-sky-300/40"
+      />
+      <button
+        type="submit"
+        className="rounded-md px-4 py-2 bg-teal-400 text-white font-medium hover:bg-teal-300 transition duration-200 focus:outline-none focus:ring focus:ring-teal-300/40 focus:bg-teal-300"
+      >
+        Search
+      </button>
+    </form>
+  )
+}
+
 export default function Dashboard() {
+  const [nameFilter, setNameFilter] = useState("")
   const { data: patients, isLoading: isLoadingPatients } =
-    api.patients.getAll.useQuery()
+    api.patients.getAll.useQuery({
+      nameFilter,
+    })
 
   const apiContext = api.useContext()
   const { mutate } = api.patients.deleteOne.useMutation({
@@ -70,12 +106,22 @@ export default function Dashboard() {
         return patient.id !== input.id
       })
 
-      apiContext.patients.getAll.setData(undefined, newPatients)
+      apiContext.patients.getAll.setData(
+        {
+          nameFilter,
+        },
+        newPatients
+      )
       return { prevPatients }
     },
     onError: async (err, input, context) => {
       if (context?.prevPatients)
-        apiContext.patients.getAll.setData(undefined, context.prevPatients)
+        apiContext.patients.getAll.setData(
+          {
+            nameFilter,
+          },
+          context.prevPatients
+        )
     },
     onSettled: async () => {
       apiContext.patients.getAll.invalidate()
@@ -98,6 +144,11 @@ export default function Dashboard() {
       <main className="max-w-6xl mx-auto px-6 pt-12">
         <h2 className="font-bold text-2xl mb-6">Patient Records</h2>
         <div>
+          <SearchBar
+            onSearch={(searchText) => {
+              setNameFilter(searchText)
+            }}
+          />
           <div className="grid grid-cols-[minmax(0,_8rem)_minmax(0,_12rem)_minmax(0,_1fr)_minmax(0,_10rem)_minmax(0,_10rem)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
             <div className="overflow-hidden overflow-ellipsis">Patient ID</div>
             <div className="overflow-hidden overflow-ellipsis">Name</div>
@@ -120,6 +171,11 @@ export default function Dashboard() {
       <main className="max-w-6xl mx-auto px-6 pt-12">
         <h2 className="font-bold text-2xl mb-6">Patient Records</h2>
         <div>
+          <SearchBar
+            onSearch={(searchText) => {
+              setNameFilter(searchText)
+            }}
+          />
           <div className="grid grid-cols-[minmax(0,_8rem)_minmax(0,_12rem)_minmax(0,_1fr)_minmax(0,_10rem)_minmax(0,_10rem)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
             <div className="overflow-hidden overflow-ellipsis">Patient ID</div>
             <div className="overflow-hidden overflow-ellipsis">Name</div>
@@ -132,7 +188,7 @@ export default function Dashboard() {
             </div>
             <div className="overflow-hidden overflow-ellipsis"></div>
           </div>
-          <div>Failed to retrieve patients</div>
+          <div className="text-center py-4">Failed to retrieve patients</div>
         </div>
       </main>
     )
@@ -141,6 +197,11 @@ export default function Dashboard() {
     <main className="max-w-6xl mx-auto px-6 pt-12">
       <h2 className="font-bold text-2xl mb-6">Patient Records</h2>
       <div>
+        <SearchBar
+          onSearch={(searchText) => {
+            setNameFilter(searchText)
+          }}
+        />
         <div className="grid grid-cols-[minmax(0,_8rem)_minmax(0,_12rem)_minmax(0,_1fr)_minmax(0,_10rem)_minmax(0,_10rem)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
           <div className="overflow-hidden overflow-ellipsis">Patient ID</div>
           <div className="overflow-hidden overflow-ellipsis">Name</div>
