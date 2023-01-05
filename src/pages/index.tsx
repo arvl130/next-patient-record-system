@@ -249,7 +249,6 @@ export default function Dashboard() {
     )
 
   const { pages } = patientsInfiniteData
-  console.log("pages", pages)
   const { patients } = pages[pageNumber]
 
   const isNotOnLastPage = pageNumber + 1 !== pages.length
