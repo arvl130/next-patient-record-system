@@ -30,7 +30,7 @@ export default function Header() {
 
   return (
     <header className="font-[Poppins] text-sky-600 flex justify-between border-b">
-      <div className="bg-teal-500 text-white font-bold pl-5 pr-10 py-1 text-right">
+      <div className="bg-teal-500 text-white font-bold px-6 py-1 text-right">
         {date}
         <br />
         {time}

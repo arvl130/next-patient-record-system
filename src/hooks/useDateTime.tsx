@@ -11,11 +11,16 @@ export function useDateTime() {
       date.getMonth()
     )} ${date.getDate()}, ${date.getFullYear()}`
 
+    const hours =
+      date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`
+
+    const ampm = date.getHours() < 12 ? "AM" : "PM"
+
     const minutes =
       date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`
     const currentTime = `${getDayOfTheWeekFromInt(
       date.getDay()
-    )} ${date.getHours()}:${minutes}`
+    )} ${hours}:${minutes} ${ampm}`
 
     return {
       date: currentDate,
