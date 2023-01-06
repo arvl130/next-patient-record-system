@@ -5,7 +5,7 @@ export default function Footer() {
   if (!session) return null
 
   return (
-    <footer className="font-[Poppins] flex justify-center bg-teal-500 text-white py-3">
+    <footer className="font-[Poppins] font-medium flex justify-center bg-teal-500 text-white py-4">
       Angelo Geulin &copy; 2022
     </footer>
   )
