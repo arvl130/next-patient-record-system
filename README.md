@@ -9,6 +9,9 @@ This is a project I've been building to learn more about the following technolog
 - [Next Auth](https://next-auth.js.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 
+![Dashboard](https://i.imgur.com/U8VWs7y.png)
+![Add Patient page](https://i.imgur.com/yX9Kwd9.png)
+
 Anyone is free to inspect, copy, and modify the code that is published here. The files under `public/assets/` are assets provided by my fellow students at [Quezon City University](https://qcu.edu.ph/). Separate appropriate licenses apply to those works.
 
 Special thanks to our beneficiaries at LFI Dental Clinic for their extensive guidance on how to build appropriate forms and user interface (UI) elements for this project.
