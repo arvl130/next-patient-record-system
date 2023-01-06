@@ -1,5 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { getBaseUrl } from "../../../utils/base-url"
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -23,20 +24,33 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (
-          credentials?.username === "admin" &&
-          credentials?.password === "admin"
-        )
-          return {
-            id: "1234",
-            name: "J Smith",
-            email: "jsmith@example.com",
-            some: "a",
-            custom: "b",
-            properties: "c",
-          }
+        if (!credentials) return null
+        const { username, password } = credentials
 
-        return null
+        try {
+          const response = await fetch(`${getBaseUrl()}/api/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username,
+              password,
+            }),
+          })
+
+          if (!response.ok) return null
+          const { user } = await response.json()
+
+          return {
+            id: user.id,
+            name: "Admin User",
+            email: "admin@example.com",
+          }
+        } catch (e) {
+          console.log("An error occured while authorizing:", e)
+          return null
+        }
       },
     }),
   ],
