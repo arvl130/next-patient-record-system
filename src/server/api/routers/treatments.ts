@@ -10,21 +10,21 @@ export const treatmentsRouter = router({
   getAll: protectedProcedure
     .input(GetAllTreatmentsSchema)
     .query(({ ctx, input }) => {
-      return ctx.prisma.treatments.findMany({
+      return ctx.prisma.treatment.findMany({
         where: input,
       })
     }),
   createOne: protectedProcedure
     .input(CreateTreatmentSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.treatments.create({
+      return ctx.prisma.treatment.create({
         data: input,
       })
     }),
   editOne: protectedProcedure
     .input(EditTreatmentSchema)
     .mutation(({ ctx, input: { id, service, procedure } }) => {
-      return ctx.prisma.treatments.update({
+      return ctx.prisma.treatment.update({
         where: {
           id,
         },
@@ -37,7 +37,7 @@ export const treatmentsRouter = router({
   deleteOne: protectedProcedure
     .input(DeleteTreatmentSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.treatments.delete({
+      return ctx.prisma.treatment.delete({
         where: input,
       })
     }),

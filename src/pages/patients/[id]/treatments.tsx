@@ -19,17 +19,7 @@ import {
 import { api } from "../../../utils/api"
 import { v4 as uuid } from "uuid"
 import { getMonthFromInt } from "../../../utils/date-int-to-str"
-
-type PartialTreatment = {
-  patientId: string
-  service: string
-  serviceDate: string
-  procedure: string
-}
-
-type Treatment = {
-  id: string
-} & PartialTreatment
+import { Treatment } from "@prisma/client"
 
 type TreatmentEntryProps = {
   treatment: Treatment
@@ -79,42 +69,25 @@ function TreatmentEntry({ treatment, deleteFn, viewFn }: TreatmentEntryProps) {
 }
 
 type TreatmentTableProps = {
-  register: UseFormRegister<{
-    patientId: string
-    service: string
-    serviceDate: string
-    procedure: string
-  }>
-  handleSubmit: UseFormHandleSubmit<{
-    patientId: string
-    service: string
-    serviceDate: string
-    procedure: string
-  }>
   patientId: string | undefined
-  errors: Partial<
-    FieldErrorsImpl<{
-      patientId: string
-      service: string
-      serviceDate: string
-      procedure: string
-    }>
-  >
+  register: UseFormRegister<CreateTreatmentType>
+  handleSubmit: UseFormHandleSubmit<CreateTreatmentType>
+  errors: Partial<FieldErrorsImpl<CreateTreatmentType>>
+  createTreatmentFn: (formData: CreateTreatmentType) => void
   deleteTreatmentFn: (id: string) => void
   viewTreatmentFn: (id: string) => void
-  createTreatmentFn: (formData: PartialTreatment) => void
   treatments: Treatment[] | undefined
   isLoadingTreatments: boolean
 }
 
 function TreatmentsTable({
+  patientId,
   register,
   handleSubmit,
-  patientId,
   errors,
+  createTreatmentFn,
   deleteTreatmentFn,
   viewTreatmentFn,
-  createTreatmentFn,
   treatments,
   isLoadingTreatments,
 }: TreatmentTableProps) {
@@ -235,9 +208,7 @@ function TreatmentsTable({
         sortedTreatments.map((treatment) => (
           <TreatmentEntry
             key={treatment.id}
-            treatment={{
-              ...treatment,
-            }}
+            treatment={treatment}
             deleteFn={() => {
               deleteTreatmentFn(treatment.id)
             }}
@@ -416,19 +387,19 @@ export default function TreatmentsPage() {
       <div className="grid grid-cols-[5fr_3fr] gap-4">
         {/* Left column */}
         <TreatmentsTable
-          register={register}
           patientId={patientId}
+          register={register}
+          handleSubmit={handleSubmit}
           errors={errors}
+          createTreatmentFn={(formData) => {
+            createTreatment(formData)
+          }}
           deleteTreatmentFn={(id) => {
             deleteTreatment({ id })
           }}
           viewTreatmentFn={(id) => {
             setSelectedTreatmentId(id)
           }}
-          createTreatmentFn={(formData) => {
-            createTreatment(formData)
-          }}
-          handleSubmit={handleSubmit}
           treatments={treatments}
           isLoadingTreatments={isLoadingTreatments}
         />

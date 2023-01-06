@@ -1,3 +1,4 @@
+import { Patient } from "@prisma/client"
 import Link from "next/link"
 import { useState } from "react"
 import { DeleteDialog } from "../components/Dialog"
@@ -7,11 +8,7 @@ import { useAuthenticatedUser } from "../hooks/useUser"
 import { api } from "../utils/api"
 
 type PatientEntryProps = {
-  patient: {
-    id: string
-    fullName: string
-    email: string
-  }
+  patient: Patient
   deleteFn: () => void
 }
 
@@ -276,11 +273,7 @@ export default function Dashboard() {
             return (
               <PatientEntry
                 key={patient.id}
-                patient={{
-                  id: patient.id,
-                  fullName: patient.fullName,
-                  email: patient.email,
-                }}
+                patient={patient}
                 deleteFn={() => {
                   handleDelete(patient.id)
                 }}

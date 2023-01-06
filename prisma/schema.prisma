@@ -18,7 +18,7 @@ model User {
 model Patient {
   id              String         @id @default(cuid())
   fullName        String
-  birthDate       DateTime
+  birthDate       String
   gender          Gender
   maritalStatus   MaritalStatus
   email           String
@@ -26,7 +26,7 @@ model Patient {
   telephoneNumber String
   dentalHistory   DentalHistory?
   medicalChart    MedicalChart?
-  Treatments      Treatments[]
+  Treatment       Treatment[]
 }
 
 enum Gender {
@@ -79,7 +79,7 @@ model MedicalChart {
   familyHistoryOnAny    String
 }
 
-model Treatments {
+model Treatment {
   id          String  @id @default(uuid())
   patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId   String

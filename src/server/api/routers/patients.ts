@@ -65,7 +65,7 @@ export const patientsRouter = router({
       return ctx.prisma.patient.create({
         data: {
           fullName: input.fullName,
-          birthDate: new Date(input.birthDate),
+          birthDate: input.birthDate,
           gender: input.gender,
           maritalStatus: input.maritalStatus,
           email: input.email,
@@ -131,7 +131,7 @@ export const patientsRouter = router({
         where: { id: input.id },
         data: {
           fullName: input.fullName,
-          birthDate: new Date(input.birthDate),
+          birthDate: input.birthDate,
           gender: input.gender,
           maritalStatus: input.maritalStatus,
           email: input.email,
