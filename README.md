@@ -22,7 +22,7 @@ The overall UI design for this project was created by Ms. [Marichelle Casbadillo
 
 This project uses MySQL for the database, and Node.js with NPM or Yarn for project management.
 
-Run the following to pull down the project dependencies:
+Run the following command to pull down the project dependencies:
 
 ```sh
 $ yarn install # or npm install
@@ -47,7 +47,17 @@ Run the project with the following command:
 $ yarn run dev
 ```
 
-The username and password for this project is `admin`.
+Register a user with the following command:
+
+```sh
+$ curl \
+    -X POST \
+    -H "Content-Type: application/json" \
+    --data '{ "username": "admin", "password": "admin" }' \
+    http://localhost:3000/api/register
+```
+
+This will create a user with the username and password `admin`. Make sure to use the correct base URL.
 
 ## License
 
