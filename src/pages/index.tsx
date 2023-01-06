@@ -199,29 +199,6 @@ export default function Dashboard() {
   const { status } = useAuthenticatedUser()
   if (status !== "authenticated") return <Loading />
 
-  if (!patientsInfiniteData)
-    return (
-      <main className="max-w-6xl mx-auto px-6 pt-12">
-        <h2 className="font-bold text-2xl mb-6">Patient Records</h2>
-        <div>
-          <SearchBar onSearch={onSearch} />
-          <div className="grid grid-cols-[minmax(0,_8rem)_minmax(0,_12rem)_minmax(0,_1fr)_minmax(0,_10rem)_minmax(0,_10rem)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
-            <div className="overflow-hidden overflow-ellipsis">Patient ID</div>
-            <div className="overflow-hidden overflow-ellipsis">Name</div>
-            <div className="overflow-hidden overflow-ellipsis">Email</div>
-            <div className="overflow-hidden overflow-ellipsis">
-              Medical Chart
-            </div>
-            <div className="overflow-hidden overflow-ellipsis">
-              Dental Treatment
-            </div>
-            <div className="overflow-hidden overflow-ellipsis"></div>
-          </div>
-          <div className="text-center py-4">Failed to retrieve patients</div>
-        </div>
-      </main>
-    )
-
   if (isLoadingPatients || isFetchingNextPatients)
     return (
       <main className="max-w-6xl mx-auto px-6 pt-12">
@@ -241,6 +218,29 @@ export default function Dashboard() {
             <div className="overflow-hidden overflow-ellipsis"></div>
           </div>
           <div className="text-center py-4">Loading ...</div>
+        </div>
+      </main>
+    )
+
+  if (!patientsInfiniteData)
+    return (
+      <main className="max-w-6xl mx-auto px-6 pt-12">
+        <h2 className="font-bold text-2xl mb-6">Patient Records</h2>
+        <div>
+          <SearchBar onSearch={onSearch} />
+          <div className="grid grid-cols-[minmax(0,_8rem)_minmax(0,_12rem)_minmax(0,_1fr)_minmax(0,_10rem)_minmax(0,_10rem)_minmax(0,_6rem)] gap-4 px-4 py-2 font-semibold bg-teal-400/40">
+            <div className="overflow-hidden overflow-ellipsis">Patient ID</div>
+            <div className="overflow-hidden overflow-ellipsis">Name</div>
+            <div className="overflow-hidden overflow-ellipsis">Email</div>
+            <div className="overflow-hidden overflow-ellipsis">
+              Medical Chart
+            </div>
+            <div className="overflow-hidden overflow-ellipsis">
+              Dental Treatment
+            </div>
+            <div className="overflow-hidden overflow-ellipsis"></div>
+          </div>
+          <div className="text-center py-4">Failed to retrieve patients</div>
         </div>
       </main>
     )
