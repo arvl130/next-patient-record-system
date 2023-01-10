@@ -15,6 +15,8 @@ import { useAuthenticatedUser } from "../../../hooks/useUser"
 import {
   CreateTreatmentSchema,
   CreateTreatmentType,
+  EditTreatmentSchema,
+  EditTreatmentType,
 } from "../../../models/treatment"
 import { api } from "../../../utils/api"
 import { v4 as uuid } from "uuid"
@@ -27,14 +29,15 @@ type TreatmentEntryProps = {
   viewFn: () => void
 }
 
+function formattedDate(dateStr: string) {
+  const date = new Date(dateStr)
+  return `${getMonthFromInt(
+    date.getMonth()
+  )} ${date.getDate()}, ${date.getFullYear()}`
+}
+
 function TreatmentEntry({ treatment, deleteFn, viewFn }: TreatmentEntryProps) {
   const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(false)
-  function formattedDate(dateStr: string) {
-    const date = new Date(dateStr)
-    return `${getMonthFromInt(
-      date.getMonth()
-    )} ${date.getDate()}, ${date.getFullYear()}`
-  }
 
   return (
     <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_6rem)] gap-4 px-4 py-2">
@@ -225,12 +228,23 @@ function TreatmentsTable({
 type SelectedTreatmentProcedureProps = {
   selectedTreatmentId: string | null
   treatments: Treatment[] | undefined
+  editFn: (treatment: EditTreatmentType) => void
 }
 
 function SelectedTreatmentProcedure({
   selectedTreatmentId,
   treatments,
+  editFn,
 }: SelectedTreatmentProcedureProps) {
+  const [isEditingMode, setEditingMode] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EditTreatmentType>({
+    resolver: zodResolver(EditTreatmentSchema),
+  })
+
   if (!selectedTreatmentId || !treatments)
     return (
       <div className="border border-teal-400/40 px-4 py-2 flex justify-center items-center">
@@ -250,13 +264,113 @@ function SelectedTreatmentProcedure({
     )
 
   return (
-    <div className="border border-teal-400/40 px-4 py-2">
+    <div>
       {selectedTreatmentId && (
         <div>
           {treatments
             .filter((treatment) => treatment.id === selectedTreatmentId)
             .map((treatment) => (
-              <div key={treatment.id}>{treatment.procedure}</div>
+              <>
+                {isEditingMode ? (
+                  <form
+                    key={treatment.id}
+                    onSubmit={handleSubmit((formData) => {
+                      editFn(formData)
+                      setEditingMode(false)
+                    })}
+                  >
+                    <input
+                      type="hidden"
+                      {...register("id")}
+                      defaultValue={treatment.id}
+                    />
+                    <div className="mb-3">
+                      <textarea
+                        className="border border-teal-400/40 px-4 py-2 h-24 w-full resize-none focus:outline-none focus:ring focus:ring-teal-400/30 focus:border-teal-500"
+                        {...register("procedure")}
+                        defaultValue={treatment.procedure}
+                      ></textarea>
+                      {errors.procedure && (
+                        <span className="text-red-500">
+                          {errors.procedure.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid mb-3">
+                      <label className="mb-1 font-medium">Date:</label>
+                      <input
+                        type="date"
+                        className="w-full border border-teal-500 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-teal-400/30"
+                        {...register("serviceDate")}
+                        defaultValue={treatment.serviceDate}
+                      />
+                      {errors.serviceDate && (
+                        <span className="text-red-500">
+                          {errors.serviceDate.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mb-3">
+                      <label className="mb-1 font-medium">Service:</label>
+                      <input
+                        type="text"
+                        className="w-full border border-teal-500 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-teal-400/30"
+                        {...register("service")}
+                        defaultValue={treatment.service}
+                      />
+                      {errors.service && (
+                        <span className="text-red-500">
+                          {errors.service.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="flex gap-4">
+                        <button
+                          type="button"
+                          className="border border-teal-500 text-sky-600 px-5 py-1 rounded-full hover:bg-teal-400 hover:border-teal-400 hover:text-white transition duration-200 focus:outline-none focus:ring focus:ring-teal-400/30"
+                          onClick={() => {
+                            setEditingMode(false)
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="border border-teal-500 bg-teal-500 hover:bg-teal-400 hover:border-teal-400 transition duration-200 text-white px-5 py-1 rounded-full focus:outline-none focus:ring focus:ring-teal-400/30"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                ) : (
+                  <div key={treatment.id}>
+                    <div className="border border-teal-400/40 px-4 py-2 h-24 mb-3">
+                      {treatment.procedure}
+                    </div>
+                    <div className="mb-3">
+                      <span className="font-medium">Date:</span>{" "}
+                      {formattedDate(treatment.serviceDate)}
+                    </div>
+                    <div className="mb-3">
+                      <span className="font-medium">Service:</span>{" "}
+                      {treatment.service}
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        className="border border-teal-500 text-sky-600 px-5 py-1 rounded-full hover:bg-teal-400 hover:border-teal-400 hover:text-white transition duration-200 focus:outline-none focus:ring focus:ring-teal-400/30"
+                        onClick={() => {
+                          setEditingMode(true)
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             ))}
         </div>
       )}
@@ -368,6 +482,48 @@ export default function TreatmentsPage() {
       },
     })
 
+  const { mutate: editTreatment } = api.patients.treatments.editOne.useMutation(
+    {
+      onMutate: async (input) => {
+        await apiContext.patients.treatments.getAll.invalidate()
+        const prevTreatments = apiContext.patients.treatments.getAll.getData()
+
+        if (!prevTreatments) return {}
+
+        const newTreatments = [
+          ...prevTreatments,
+          {
+            ...input,
+            patientId: patientId as string,
+          },
+        ]
+        apiContext.patients.treatments.getAll.setData(
+          {
+            patientId: patientId as string,
+          },
+          newTreatments
+        )
+
+        return { prevTreatments }
+      },
+      onError: (err, input, context) => {
+        if (context?.prevTreatments)
+          apiContext.patients.treatments.getAll.setData(
+            {
+              patientId: patientId as string,
+            },
+            context.prevTreatments
+          )
+      },
+      onSuccess: () => {
+        reset()
+      },
+      onSettled: () => {
+        apiContext.patients.treatments.getAll.invalidate()
+      },
+    }
+  )
+
   const { status } = useAuthenticatedUser()
   if (status !== "authenticated") return <Loading />
 
@@ -408,6 +564,9 @@ export default function TreatmentsPage() {
         <SelectedTreatmentProcedure
           selectedTreatmentId={selectedTreatmentId}
           treatments={treatments}
+          editFn={(treatment: EditTreatmentType) => {
+            editTreatment(treatment)
+          }}
         />
       </div>
     </main>
