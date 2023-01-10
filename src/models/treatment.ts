@@ -1,5 +1,9 @@
 import { z } from "zod"
-import { CANNOT_BE_EMPTY, UP_TO_191_CHARS_ONLY } from "./validation-messages"
+import {
+  CANNOT_BE_EMPTY,
+  UP_TO_191_CHARS_ONLY,
+  INVALID_DATE,
+} from "./validation-messages"
 
 export const GetAllTreatmentsSchema = z.object({
   patientId: z.string(),
@@ -18,7 +22,7 @@ export const CreateTreatmentSchema = z.object({
       message: UP_TO_191_CHARS_ONLY,
     }),
   serviceDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: "Invalid date",
+    message: INVALID_DATE,
   }),
   procedure: z.string().min(1, {
     message: CANNOT_BE_EMPTY,
@@ -29,9 +33,20 @@ export type CreateTreatmentType = z.infer<typeof CreateTreatmentSchema>
 
 export const EditTreatmentSchema = z.object({
   id: z.string().uuid(),
-  service: z.string(),
-  serviceDate: z.date(),
-  procedure: z.string(),
+  service: z
+    .string()
+    .min(1, {
+      message: CANNOT_BE_EMPTY,
+    })
+    .max(191, {
+      message: UP_TO_191_CHARS_ONLY,
+    }),
+  serviceDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
+    message: INVALID_DATE,
+  }),
+  procedure: z.string().min(1, {
+    message: CANNOT_BE_EMPTY,
+  }),
 })
 
 export type EditTreatmentType = z.infer<typeof EditTreatmentSchema>

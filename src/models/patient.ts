@@ -1,5 +1,9 @@
 import { z } from "zod"
-import { CANNOT_BE_EMPTY, UP_TO_191_CHARS_ONLY } from "./validation-messages"
+import {
+  CANNOT_BE_EMPTY,
+  UP_TO_191_CHARS_ONLY,
+  INVALID_DATE,
+} from "./validation-messages"
 
 export const SignInSchema = z.object({
   username: z.string().min(1, { message: CANNOT_BE_EMPTY }),
@@ -28,7 +32,7 @@ export const CreatePatientSchema = z.object({
     .min(1, { message: CANNOT_BE_EMPTY })
     .max(191, { message: UP_TO_191_CHARS_ONLY }),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: "Invalid date",
+    message: INVALID_DATE,
   }),
   gender: z.union([z.literal("MALE"), z.literal("FEMALE"), z.literal("OTHER")]),
   maritalStatus: z.union([
@@ -85,7 +89,7 @@ export const EditPatientSchema = z.object({
     .min(1, { message: CANNOT_BE_EMPTY })
     .max(191, { message: UP_TO_191_CHARS_ONLY }),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: "Invalid date",
+    message: INVALID_DATE,
   }),
   gender: z.union([z.literal("MALE"), z.literal("FEMALE"), z.literal("OTHER")]),
   maritalStatus: z.union([
