@@ -35,6 +35,8 @@ export const authOptions: NextAuthOptions = {
 
       return session
     },
+    // This solution to the issue is documented here:
+    // https://github.com/nextauthjs/next-auth/discussions/536#discussioncomment-1863534
   },
   session: {
     strategy: "jwt",
