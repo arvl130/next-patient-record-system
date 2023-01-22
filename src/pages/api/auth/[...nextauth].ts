@@ -4,9 +4,33 @@ import { getBaseUrl } from "../../../utils/base-url"
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, token }) {
-      if (session.user && token.sub) {
-        session.user.id = token.sub
+    // On the first run of this callback, the parameter "user"
+    // here will be defined and populated using the return value
+    // of the authorize callback.
+    //
+    // Use that opportunity to obtain the role and id of the user
+    // from the authorize callback, and save it to our token as
+    // custom claims.
+    jwt: async ({ token, user: userFromAuthorizeCallback }) => {
+      // This branch will only fire on the first call of this callback.
+      if (userFromAuthorizeCallback) {
+        const { id, role } = userFromAuthorizeCallback as any
+        token.id = id
+        token.role = role
+      }
+
+      return token
+    },
+    // The third parameter "user" here will not be defined,
+    // because we are not using a database session strategy
+    // (this parameter is populated using the database).
+    //
+    // For this reason, we need to obtain our session information
+    // using the custom claims from our token.
+    session({ session, token: { id, role } }) {
+      if (session.user) {
+        if (typeof id === "string") session.user.id = id
+        if (typeof role === "string") session.user.role = role
       }
 
       return session
@@ -45,6 +69,7 @@ export const authOptions: NextAuthOptions = {
             id: user.id,
             name: "Admin User",
             email: "admin@example.com",
+            role: "ADMIN",
           }
         } catch (e) {
           console.log("An error occured while authorizing:", e)
