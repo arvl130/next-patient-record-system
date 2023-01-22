@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
       // This branch will only fire on the first call of this callback.
       if (userFromAuthorizeCallback) {
         const { id, role } = userFromAuthorizeCallback as any
-        token.id = id
+        token.uid = id
         token.role = role
       }
 
@@ -27,10 +27,10 @@ export const authOptions: NextAuthOptions = {
     //
     // For this reason, we need to obtain our session information
     // using the custom claims from our token.
-    session({ session, token: { id, role } }) {
+    session({ session, token: { uid, role } }) {
       if (session.user) {
-        if (typeof id === "string") session.user.id = id
-        if (typeof role === "string") session.user.role = role
+        session.user.id = uid
+        session.user.role = role
       }
 
       return session
